@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SudokuSolver
 {
@@ -10,10 +9,9 @@ namespace SudokuSolver
     {
         public static int[] generateGridArray(string gridString)
         {
-            var _gridString = gridString;
             var _gridArray = new int[81];
             int _counter = -1;
-            foreach (char number in _gridString)
+            foreach (char number in gridString)
             {
                 ++_counter;
                 var numberString = number.ToString();
@@ -47,17 +45,8 @@ namespace SudokuSolver
 
         public static string intArrayToString(int[] intArray)
         {
-            int arrayLength = intArray.Length;
-            var outputString = "";
-
-            for (int i = 0; i < arrayLength; i++)
-            {
-                outputString += intArray[i].ToString();
-            }
-
-            return outputString;
+            return new string(Array.ConvertAll(intArray, x => (char)('0' + x)));
         }
-
         public static string removeWhitespaces(string input)
         {
             return new string(input.ToCharArray()
