@@ -47,7 +47,7 @@ namespace SudokuSolver
                 }
             }
 
-            else if (arguments.Contains("-validate"))
+            else if(arguments.Contains("-validate"))
             {
                 int index = arguments.IndexOf("-validate");
                 try
