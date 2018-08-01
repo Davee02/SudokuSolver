@@ -8,7 +8,7 @@
 
             for (int i = 0; i < gridString.Length; i++)
             {
-                prettyGrid += gridString[i].ToString() + " ";
+                prettyGrid += gridString[i] + " ";
                 if ((i + 1) % 27 == 0)
                 {
                     prettyGrid += "\n\n";
@@ -38,14 +38,7 @@
 
             foreach (var item in grid)
             {
-                if (item == '.')
-                {
-                    newGrid += "0";
-                }
-                else
-                {
-                    newGrid += item;
-                }
+                newGrid += item == '.' ? "0" : item.ToString();
             }
 
             return newGrid;

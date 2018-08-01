@@ -99,19 +99,7 @@ namespace SudokuSolver
             var column = GetSectionOfGrid.SingleColumn(grid, positions[1]);
             var square = GetSectionOfGrid.SingleSquare(row, grid, positions[0], positions[1]);
 
-            if (!(SearchForDuplicates(row)))
-            {
-                if (!(SearchForDuplicates(column)))
-                {
-                    if (!(SearchForDuplicates(square)))
-                    {
-                        return true;
-                    }
-                    else return false;
-                }
-                else return false;
-            }
-            else return false;
+            return !(SearchForDuplicates(row)) && !(SearchForDuplicates(column)) && !(SearchForDuplicates(square));
         }
 
         private static bool IsValidWholeGrid(int[] grid)
@@ -120,10 +108,7 @@ namespace SudokuSolver
             var columns = GetSectionOfGrid.Columns(grid);
             var squares = GetSectionOfGrid.Squares(rows);
 
-            if (ValidateSquare(squares) && ValidateRow(rows) && ValidateColumn(columns))
-                return true;
-            else
-                return false;
+            return (ValidateSquare(squares) && ValidateRow(rows) && ValidateColumn(columns));
         }
 
         private static bool ValidateRow(string[] rows)
