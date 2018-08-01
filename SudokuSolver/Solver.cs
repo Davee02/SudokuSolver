@@ -11,8 +11,8 @@ namespace SudokuSolver
     {
         public static void Solve(string grid, bool shortOutput)
         {
-            grid = Helper.removeWhitespaces(grid);
-            grid = Parser.transformGridFromPointToZero(grid);
+            grid = Helper.RemoveWhitespaces(grid);
+            grid = Parser.TransformGridFromPointToZero(grid);
             Console.Clear();
             if (grid.Length != 81)
             {
@@ -22,10 +22,10 @@ namespace SudokuSolver
                 return;
             }
             if (shortOutput == false)
-                Console.WriteLine("Your Input:\n\n" + Parser.prettyPrintString(grid));
+                Console.WriteLine("Your Input:\n\n" + Parser.PrettyPrintString(grid));
 
             var watch = Stopwatch.StartNew();
-            (var solvedGrid, var iterations) = SolveSudoku.solveGrid(grid);
+            (var solvedGrid, var iterations) = SolveSudoku.SolveGrid(grid);
 
             watch.Stop();
             if (shortOutput)
@@ -35,15 +35,15 @@ namespace SudokuSolver
             else
             {
                 Console.WriteLine("Elapsed Time: " + watch.ElapsedMilliseconds + "ms\nTotal Iterations: " + iterations + "\n");
-                Console.WriteLine("The Solution:\n\n" + Parser.prettyPrintString(solvedGrid));
+                Console.WriteLine("The Solution:\n\n" + Parser.PrettyPrintString(solvedGrid));
             }
             Console.ReadLine();
         }
 
         public static void Validate(string grid, bool shortOutput)
         {
-            grid = Helper.removeWhitespaces(grid);
-            grid = Parser.transformGridFromPointToZero(grid);
+            grid = Helper.RemoveWhitespaces(grid);
+            grid = Parser.TransformGridFromPointToZero(grid);
             Console.Clear();
             if (grid.Length != 81)
             {
@@ -53,8 +53,8 @@ namespace SudokuSolver
                 return;
             }
 
-            var transformedGrid = Helper.generateGridArray(grid);
-            bool isValid = ValidateGrid.isValid(transformedGrid);
+            var transformedGrid = Helper.GenerateGridArray(grid);
+            bool isValid = ValidateGrid.IsValid(transformedGrid);
 
             if (shortOutput)
             {
@@ -64,11 +64,11 @@ namespace SudokuSolver
             {
                 if (isValid)
                 {
-                    Console.WriteLine("Your inputed Sudoku is valid:\n\n\n" + Parser.prettyPrintString(grid));
+                    Console.WriteLine("Your inputed Sudoku is valid:\n\n\n" + Parser.PrettyPrintString(grid));
                 }
                 else
                 {
-                    Console.WriteLine("Your inputed Sudoku is invalid:\n\n\n" + Parser.prettyPrintString(grid));
+                    Console.WriteLine("Your inputed Sudoku is invalid:\n\n\n" + Parser.PrettyPrintString(grid));
                 }
             }
             Console.ReadLine();
@@ -77,33 +77,33 @@ namespace SudokuSolver
 
     class ValidateGrid
     {
-        public static bool isValid(int[] grid, int index = -1)
+        public static bool IsValid(int[] grid, int index = -1)
         {
             if (index == -1)
             {
-                return isValidWholeGrid(grid);
+                return IsValidWholeGrid(grid);
             }
             else
             {
-                return isValidSectionOfGrid(grid, index);
+                return IsValidSectionOfGrid(grid, index);
             }
 
         }
 
-        private static bool isValidSectionOfGrid(int[] grid, int index)
+        private static bool IsValidSectionOfGrid(int[] grid, int index)
         {
-            var gridString = Helper.intArrayToString(grid);
-            var positions = GetPositionInGrid.getPosition(gridString, index);
+            var gridString = Helper.IntArrayToString(grid);
+            var positions = GetPositionInGrid.GetPosition(gridString, index);
 
-            var row = GetSectionOfGrid.singleRow(grid, positions[0]);
-            var column = GetSectionOfGrid.singleColumn(grid, positions[1]);
-            var square = GetSectionOfGrid.singleSquare(row, grid, positions[0], positions[1]);
+            var row = GetSectionOfGrid.SingleRow(grid, positions[0]);
+            var column = GetSectionOfGrid.SingleColumn(grid, positions[1]);
+            var square = GetSectionOfGrid.SingleSquare(row, grid, positions[0], positions[1]);
 
-            if (!(searchForDuplicates(row)))
+            if (!(SearchForDuplicates(row)))
             {
-                if (!(searchForDuplicates(column)))
+                if (!(SearchForDuplicates(column)))
                 {
-                    if (!(searchForDuplicates(square)))
+                    if (!(SearchForDuplicates(square)))
                     {
                         return true;
                     }
@@ -114,23 +114,23 @@ namespace SudokuSolver
             else return false;
         }
 
-        private static bool isValidWholeGrid(int[] grid)
+        private static bool IsValidWholeGrid(int[] grid)
         {
             var rows = GetSectionOfGrid.Rows(grid);
             var columns = GetSectionOfGrid.Columns(grid);
             var squares = GetSectionOfGrid.Squares(rows);
 
-            if (validateSquare(squares) && validateRow(rows) && validateColumn(columns))
+            if (ValidateSquare(squares) && ValidateRow(rows) && ValidateColumn(columns))
                 return true;
             else
                 return false;
         }
 
-        private static bool validateRow(string[] rows)
+        private static bool ValidateRow(string[] rows)
         {
             for (int i = 0; i < 9; i++)
             {
-                if (searchForDuplicates(rows[i]))
+                if (SearchForDuplicates(rows[i]))
                 {
                     return false;
                 }
@@ -138,24 +138,11 @@ namespace SudokuSolver
             return true;
         }
 
-        private static bool validateColumn(string[] columns)
+        private static bool ValidateColumn(string[] columns)
         {
             for (int i = 0; i < 9; i++)
             {
-                if (searchForDuplicates(columns[i]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private static bool validateSquare(string[] squares)
-        {
-            for (int i = 0; i < 9; i++)
-            {
-                if (searchForDuplicates(squares[i]))
+                if (SearchForDuplicates(columns[i]))
                 {
                     return false;
                 }
@@ -164,7 +151,20 @@ namespace SudokuSolver
             return true;
         }
 
-        private static bool searchForDuplicates(string values) //https://stackoverflow.com/questions/723213/sudoku-algorithm-in-c-sharp
+        private static bool ValidateSquare(string[] squares)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                if (SearchForDuplicates(squares[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool SearchForDuplicates(string values) //https://stackoverflow.com/questions/723213/sudoku-algorithm-in-c-sharp
         {
             int flag = 0;
             foreach (char number in values)
@@ -185,7 +185,7 @@ namespace SudokuSolver
     class GetSectionOfGrid
     {
         private static StringBuilder sb = new StringBuilder();
-        public static string singleRow(int[] grid, int index)
+        public static string SingleRow(int[] grid, int index)
         {
             sb.Clear();
             for (int j = 0; j < 9; j++)
@@ -198,7 +198,7 @@ namespace SudokuSolver
 
         public static string[] Rows(int[] grid)
         {
-            var _rows = new string[9];
+            var rows = new string[9];
             for (int i = 0; i < 9; i++)
             {
                 sb.Clear();
@@ -206,15 +206,15 @@ namespace SudokuSolver
                 {
                     sb.Append(grid[i * 9 + j]);
                 }
-                _rows[i] = sb.ToString();
+                rows[i] = sb.ToString();
             }
 
-            return _rows;
+            return rows;
         }
 
         public static string[] Columns(int[] grid)
         {
-            var _columns = new string[9];
+            var columns = new string[9];
             for (int i = 0; i < 9; i++)
             {
                 sb.Clear();
@@ -222,12 +222,12 @@ namespace SudokuSolver
                 {
                     sb.Append(grid[i + 9 * j]);
                 }
-                _columns[i] = sb.ToString();
+                columns[i] = sb.ToString();
             }
 
-            return _columns;
+            return columns;
         }
-        public static string singleColumn(int[] grid, int index)
+        public static string SingleColumn(int[] grid, int index)
         {
             sb.Clear();
             for (int j = 0; j < 9; j++)
@@ -238,7 +238,7 @@ namespace SudokuSolver
         }
         public static string[] Squares(string[] rows)
         {
-            var _squares = new List<string>();
+            var squares = new List<string>();
             foreach (var times in Range(0, 3))
             {
                 var littleSquares = new string[3]; 
@@ -254,13 +254,13 @@ namespace SudokuSolver
                             littleSquares[2] += rows[row + 3 * times][i];
                     }
                 }
-                _squares.AddRange(littleSquares);
+                squares.AddRange(littleSquares);
             }
 
-            return _squares.ToArray();
+            return squares.ToArray();
         }
 
-        public static string singleSquare(string row, int[] grid, int rowIndex, int columnIndex)
+        public static string SingleSquare(string row, int[] grid, int rowIndex, int columnIndex)
         {
             int indexOfSubGridRow = rowIndex % 3;
             var rows = new string[3];
@@ -268,19 +268,19 @@ namespace SudokuSolver
             if (indexOfSubGridRow == 0)
             {
                 rows[0] = row;
-                rows[1] = singleRow(grid, rowIndex + 1);
-                rows[2] = singleRow(grid, rowIndex + 2);
+                rows[1] = SingleRow(grid, rowIndex + 1);
+                rows[2] = SingleRow(grid, rowIndex + 2);
             }
             else if (indexOfSubGridRow == 1)
             {
-                rows[0] = singleRow(grid, rowIndex - 1);
+                rows[0] = SingleRow(grid, rowIndex - 1);
                 rows[1] = row;
-                rows[2] = singleRow(grid, rowIndex + 1);
+                rows[2] = SingleRow(grid, rowIndex + 1);
             }
             else if (indexOfSubGridRow == 2)
             {
-                rows[0] = singleRow(grid, rowIndex - 2);
-                rows[1] = singleRow(grid, rowIndex - 1);
+                rows[0] = SingleRow(grid, rowIndex - 2);
+                rows[1] = SingleRow(grid, rowIndex - 1);
                 rows[2] = row;
             }
             sb.Clear();
@@ -306,17 +306,17 @@ namespace SudokuSolver
 
     class GetPositionInGrid
     {
-        public static int[] getPosition(string grid, int indexOfNumber)
+        public static int[] GetPosition(string grid, int indexOfNumber)
         {
             var postitions = new int[3];
-            postitions[0] = getRowIndex(grid, indexOfNumber);
-            postitions[1] = getColumnIndex(grid, indexOfNumber);
-            postitions[2] = getSquareIndex(postitions[0], postitions[1]);
+            postitions[0] = GetRowIndex(indexOfNumber);
+            postitions[1] = GetColumnIndex(indexOfNumber);
+            postitions[2] = GetSquareIndex(postitions[0], postitions[1]);
 
             return postitions;
         }
 
-        private static int getRowIndex(string grid, int indexOfNumber)
+        private static int GetRowIndex(int indexOfNumber)
         {
             var rowIndexTemp = (double)indexOfNumber / 9;
             int rowIndex = (int)rowIndexTemp;
@@ -324,7 +324,7 @@ namespace SudokuSolver
             return rowIndex;
         }
 
-        private static int getColumnIndex(string grid, int indexOfNumber)
+        private static int GetColumnIndex(int indexOfNumber)
         {
             var columnIndexTemp = (double)indexOfNumber / 9;
             columnIndexTemp = columnIndexTemp - (int)columnIndexTemp;
@@ -334,9 +334,9 @@ namespace SudokuSolver
             return (int)columnIndexTemp;
         }
 
-        private static int getSquareIndex(int indexOfRow, int indexOfColumn)
+        private static int GetSquareIndex(int indexOfRow, int indexOfColumn)
         {
-            var allPossibilities = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            var allPossibilities = Helper.OneToNineArray;
 
             if (indexOfRow / 3 == 0)
                 allPossibilities = allPossibilities.Except(new int[] { 3, 4, 5, 6, 7, 8, 9 }).ToArray();
@@ -355,10 +355,10 @@ namespace SudokuSolver
     }
     class SolveSudoku
     {
-        public static (string, int) solveGrid(string unsolvedGrid)
+        public static (string, int) SolveGrid(string unsolvedGrid)
         {
             var index = 0;
-            var grid = Helper.generateGridArray(unsolvedGrid);
+            var grid = Helper.GenerateGridArray(unsolvedGrid);
             bool isSolved = false;
             var allPossibilities = GetPossibleNumbersInGrid(grid);
             var possibilitiesIndexes = new int[81];
@@ -367,14 +367,14 @@ namespace SudokuSolver
                 possibilitiesIndexes[i] = -1;
             }
 
-            unsolvedGrid = Helper.intArrayToString(grid);
+            unsolvedGrid = Helper.IntArrayToString(grid);
             if (IsSolved(unsolvedGrid))
             {
-                if (ValidateGrid.isValid(grid))
+                if (ValidateGrid.IsValid(grid))
                     return (unsolvedGrid, 0);
             }
 
-            (grid, isSolved) = InsertCandidatesWithOnePossibility(grid, allPossibilities);
+            (grid, isSolved) = InsertCandidatesWithOnePossibility(grid);
 
             index = 0;
             bool isValid = false;
@@ -402,7 +402,7 @@ namespace SudokuSolver
                     {
                         ++possibilitiesIndexes[index];
                         grid[index] = currentPossibility[indexOfPossibility];
-                        isValid = ValidateGrid.isValid(grid, index);
+                        isValid = ValidateGrid.IsValid(grid, index);
                         if (isValid == false)
                         {
                             grid[index] = 0;
@@ -432,13 +432,13 @@ namespace SudokuSolver
                 }
                 if (isValid)
                 {
-                    isSolved = IsSolved(Helper.intArrayToString(grid));
+                    isSolved = IsSolved(Helper.IntArrayToString(grid));
                 }
                 ++index;
                 ++iterations;
             }
 
-            return (Helper.intArrayToString(grid), iterations);
+            return (Helper.IntArrayToString(grid), iterations);
         }
 
         private static List<List<int>> GetPossibleNumbersInGrid(int[] gridIntArray)
@@ -448,17 +448,17 @@ namespace SudokuSolver
             var allRows = GetSectionOfGrid.Rows(gridIntArray);
             var allColumns = GetSectionOfGrid.Columns(gridIntArray);
             var allSquares = GetSectionOfGrid.Squares(allRows);
-            string gridString = Helper.intArrayToString(gridIntArray);
+            string gridString = Helper.IntArrayToString(gridIntArray);
 
             foreach (char number in gridString)
             {
                 if (number == '0')
                 {
-                    var possibleNumbers = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }.ToList();
-                    var position = GetPositionInGrid.getPosition(gridString, indexInGrid);
-                    var currentRow = Helper.stringToIntList(allRows[position[0]]);
-                    var currentColumn = Helper.stringToIntList(allColumns[position[1]]);
-                    var currentSquare = Helper.stringToIntList(allSquares[position[2]]);
+                    var possibleNumbers = Helper.OneToNineArray.ToList();
+                    var position = GetPositionInGrid.GetPosition(gridString, indexInGrid);
+                    var currentRow = Helper.StringToIntList(allRows[position[0]]);
+                    var currentColumn = Helper.StringToIntList(allColumns[position[1]]);
+                    var currentSquare = Helper.StringToIntList(allSquares[position[2]]);
 
                     var itemsToRemove = currentRow.Union(currentColumn).Union(currentSquare).ToList();
                     possibleNumbers = possibleNumbers.Except(itemsToRemove).ToList();
@@ -475,24 +475,25 @@ namespace SudokuSolver
 
         private static bool IsSolved(string grid)
         {
-            var gridArray = Helper.generateGridArray(grid);
-            bool isGridFilledOut = isFilledOut(gridArray);
+            var gridArray = Helper.GenerateGridArray(grid);
+            bool isGridFilledOut = IsFilledOut(gridArray);
             if (isGridFilledOut == false)
                 return false;
-            bool isGridValid = ValidateGrid.isValid(gridArray);
+            bool isGridValid = ValidateGrid.IsValid(gridArray);
             return isGridValid;
         }
 
-        private static bool isFilledOut(int[] gridIntArray)
+        private static bool IsFilledOut(int[] gridIntArray)
         {
             return gridIntArray.All(number => number != 0);
         }
 
-        private static (int[], bool) InsertCandidatesWithOnePossibility(int[] grid, List<List<int>> possibilities)
+        private static (int[], bool) InsertCandidatesWithOnePossibility(int[] grid)
         {
             var onePossibilityIndexes = new List<int> { };
             int onePossibilityIndexesFromLastIteration = 1;
             var index = 0;
+            var possibilities = new List<List<int>>();
 
             while (onePossibilityIndexes.Count != onePossibilityIndexesFromLastIteration)
             {

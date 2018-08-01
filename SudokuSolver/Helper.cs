@@ -7,17 +7,18 @@ namespace SudokuSolver
 {
     class Helper
     {
-        public static int[] generateGridArray(string gridString)
+        public static readonly int[] OneToNineArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        public static int[] GenerateGridArray(string gridString)
         {
-            var _gridArray = new int[81];
-            int _counter = -1;
+            var gridArray = new int[81];
+            int counter = -1;
             foreach (char number in gridString)
             {
-                ++_counter;
+                ++counter;
                 var numberString = number.ToString();
                 try
                 {
-                    _gridArray[_counter] = Int32.Parse(numberString);
+                    gridArray[counter] = Int32.Parse(numberString);
                 }
                 catch (FormatException)
                 {
@@ -29,10 +30,10 @@ namespace SudokuSolver
                 }
             }
 
-            return _gridArray;
+            return gridArray;
         }
 
-        public static List<int> stringToIntList(string inputString)
+        public static List<int> StringToIntList(string inputString)
         {
             var outputList = new List<int>();
             foreach (char singleChar in inputString)
@@ -43,18 +44,18 @@ namespace SudokuSolver
             return outputList;
         }
 
-        public static string intArrayToString(int[] intArray)
+        public static string IntArrayToString(int[] intArray)
         {
             return new string(Array.ConvertAll(intArray, x => (char)('0' + x)));
         }
-        public static string removeWhitespaces(string input)
+        public static string RemoveWhitespaces(string input)
         {
             return new string(input.ToCharArray()
                 .Where(c => !Char.IsWhiteSpace(c))
                 .ToArray());
         }
 
-        public static string[] getGridsFromFile(string path)
+        public static string[] GetGridsFromFile(string path)
         {
             try
             {

@@ -2,7 +2,7 @@
 {
     class Parser
     {
-        public static string prettyPrintString(string gridString)
+        public static string PrettyPrintString(string gridString)
         {
             var prettyGrid = "";
 
@@ -32,7 +32,7 @@
             return prettyGrid;
         }
 
-        public static string transformGridFromPointToZero(string grid)
+        public static string TransformGridFromPointToZero(string grid)
         {
             var newGrid = "";
 

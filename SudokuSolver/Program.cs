@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SudokuSolver
 {
@@ -32,7 +29,7 @@ namespace SudokuSolver
                 int index = arguments.IndexOf("-solve");
                 try
                 {
-                    var grids = Helper.getGridsFromFile(arguments[index + 1]);
+                    var grids = Helper.GetGridsFromFile(arguments[index + 1]);
                     if (grids.Length == 1 & grids[0] == "")
                         grids[0] = arguments[index + 1];
                     foreach (string grid in grids)
@@ -52,7 +49,7 @@ namespace SudokuSolver
                 int index = arguments.IndexOf("-validate");
                 try
                 {
-                    var grids = Helper.getGridsFromFile(arguments[index + 1]);
+                    var grids = Helper.GetGridsFromFile(arguments[index + 1]);
                     if (grids.Length == 1 & grids[0] == "")
                         grids[0] = arguments[index + 1];
                     foreach (string grid in grids)
