@@ -8,6 +8,7 @@ namespace SudokuSolver
     class Helper
     {
         public static readonly int[] OneToNineArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
         public static int[] GenerateGridArray(string gridString)
         {
             var gridArray = new int[81];
@@ -18,7 +19,7 @@ namespace SudokuSolver
                 var numberString = number.ToString();
                 try
                 {
-                    gridArray[counter] = Int32.Parse(numberString);
+                    gridArray[counter] = int.Parse(numberString);
                 }
                 catch (FormatException)
                 {
@@ -38,7 +39,7 @@ namespace SudokuSolver
             var outputList = new List<int>();
             foreach (char singleChar in inputString)
             {
-                var stringToAdd = Int32.Parse(singleChar.ToString());
+                var stringToAdd = int.Parse(singleChar.ToString());
                 outputList.Add(stringToAdd);
             }
             return outputList;
@@ -51,7 +52,7 @@ namespace SudokuSolver
         public static string RemoveWhitespaces(string input)
         {
             return new string(input.ToCharArray()
-                .Where(c => !Char.IsWhiteSpace(c))
+                .Where(c => !char.IsWhiteSpace(c))
                 .ToArray());
         }
 
@@ -63,7 +64,7 @@ namespace SudokuSolver
             }
             catch
             {
-                return new string[] { "" };
+                return new[] { "" };
             }
             var grids = File.ReadAllLines(path);
             return grids;

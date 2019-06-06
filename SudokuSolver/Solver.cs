@@ -25,7 +25,7 @@ namespace SudokuSolver
                 Console.WriteLine("Your Input:\n\n" + Parser.PrettyPrintString(grid));
 
             var watch = Stopwatch.StartNew();
-            (var solvedGrid, var iterations) = SolveSudoku.SolveGrid(grid);
+            var (solvedGrid, iterations) = SolveSudoku.SolveGrid(grid);
 
             watch.Stop();
             if (shortOutput)
@@ -111,7 +111,7 @@ namespace SudokuSolver
             return (ValidateSquare(squares) && ValidateRow(rows) && ValidateColumn(columns));
         }
 
-        private static bool ValidateRow(string[] rows)
+        private static bool ValidateRow(IReadOnlyList<string> rows)
         {
             for (int i = 0; i < 9; i++)
             {
@@ -123,7 +123,7 @@ namespace SudokuSolver
             return true;
         }
 
-        private static bool ValidateColumn(string[] columns)
+        private static bool ValidateColumn(IReadOnlyList<string> columns)
         {
             for (int i = 0; i < 9; i++)
             {
@@ -136,7 +136,7 @@ namespace SudokuSolver
             return true;
         }
 
-        private static bool ValidateSquare(string[] squares)
+        private static bool ValidateSquare(IReadOnlyList<string> squares)
         {
             for (int i = 0; i < 9; i++)
             {
@@ -169,16 +169,17 @@ namespace SudokuSolver
 
     class GetSectionOfGrid
     {
-        private static StringBuilder sb = new StringBuilder();
+        private static readonly StringBuilder _sb = new StringBuilder();
+
         public static string SingleRow(int[] grid, int index)
         {
-            sb.Clear();
+            _sb.Clear();
             for (int j = 0; j < 9; j++)
             {
-                sb.Append(grid[index * 9 + j]);
+                _sb.Append(grid[index * 9 + j]);
             }
 
-            return sb.ToString(); ;
+            return _sb.ToString(); ;
         }
 
         public static string[] Rows(int[] grid)
@@ -186,12 +187,12 @@ namespace SudokuSolver
             var rows = new string[9];
             for (int i = 0; i < 9; i++)
             {
-                sb.Clear();
+                _sb.Clear();
                 for (int j = 0; j < 9; j++)
                 {
-                    sb.Append(grid[i * 9 + j]);
+                    _sb.Append(grid[i * 9 + j]);
                 }
-                rows[i] = sb.ToString();
+                rows[i] = _sb.ToString();
             }
 
             return rows;
@@ -202,24 +203,24 @@ namespace SudokuSolver
             var columns = new string[9];
             for (int i = 0; i < 9; i++)
             {
-                sb.Clear();
+                _sb.Clear();
                 for (int j = 0; j < 9; j++)
                 {
-                    sb.Append(grid[i + 9 * j]);
+                    _sb.Append(grid[i + 9 * j]);
                 }
-                columns[i] = sb.ToString();
+                columns[i] = _sb.ToString();
             }
 
             return columns;
         }
         public static string SingleColumn(int[] grid, int index)
         {
-            sb.Clear();
+            _sb.Clear();
             for (int j = 0; j < 9; j++)
             {
-                sb.Append(grid[index + 9 * j]);
+                _sb.Append(grid[index + 9 * j]);
             }
-            return sb.ToString();
+            return _sb.ToString();
         }
         public static string[] Squares(string[] rows)
         {
@@ -268,24 +269,24 @@ namespace SudokuSolver
                 rows[1] = SingleRow(grid, rowIndex - 1);
                 rows[2] = row;
             }
-            sb.Clear();
+            _sb.Clear();
             for (int i = 0; i < 3; i++)
             {
                 if (columnIndex < 3)
                 {
-                    sb.Append(String.Concat(rows[i][0], rows[i][1], rows[i][2]));
+                    _sb.Append(string.Concat(rows[i][0], rows[i][1], rows[i][2]));
                 }
                 else if (columnIndex < 6)
                 {
-                    sb.Append(String.Concat(rows[i][3], rows[i][4], rows[i][5]));
+                    _sb.Append(string.Concat(rows[i][3], rows[i][4], rows[i][5]));
                 }
                 else
                 {
-                    sb.Append(String.Concat(rows[i][6], rows[i][7], rows[i][8]));
+                    _sb.Append(string.Concat(rows[i][6], rows[i][7], rows[i][8]));
                 }
             }
             
-            return sb.ToString();
+            return _sb.ToString();
         }
     }
 
@@ -312,7 +313,7 @@ namespace SudokuSolver
         private static int GetColumnIndex(int indexOfNumber)
         {
             var columnIndexTemp = (double)indexOfNumber / 9;
-            columnIndexTemp = columnIndexTemp - (int)columnIndexTemp;
+            columnIndexTemp -= (int)columnIndexTemp;
             columnIndexTemp *= 9;
             columnIndexTemp += 0.00001; // Tolerance of the rounding above
 
@@ -323,19 +324,28 @@ namespace SudokuSolver
         {
             var allPossibilities = Helper.OneToNineArray;
 
-            if (indexOfRow / 3 == 0)
-                allPossibilities = allPossibilities.Except(new int[] { 3, 4, 5, 6, 7, 8, 9 }).ToArray();
-            else if (indexOfRow / 3 == 1)
-                allPossibilities = allPossibilities.Except(new int[] { 0, 1, 2, 6, 7, 8 }).ToArray();
-            else if (indexOfRow / 3 == 2)
-                allPossibilities = allPossibilities.Except(new int[] { 0, 1, 2, 3, 4, 5 }).ToArray();
+            switch (indexOfRow / 3)
+            {
+                case 0:
+                    allPossibilities = allPossibilities.Except(new[] { 3, 4, 5, 6, 7, 8, 9 }).ToArray();
+                    break;
+                case 1:
+                    allPossibilities = allPossibilities.Except(new[] { 0, 1, 2, 6, 7, 8 }).ToArray();
+                    break;
+                case 2:
+                    allPossibilities = allPossibilities.Except(new[] { 0, 1, 2, 3, 4, 5 }).ToArray();
+                    break;
+            }
 
-            if (indexOfColumn / 3 == 0)
-                return allPossibilities[0];
-            else if (indexOfColumn / 3 == 1)
-                return allPossibilities[1];
-            else
-                return allPossibilities[2];
+            switch (indexOfColumn / 3)
+            {
+                case 0:
+                    return allPossibilities[0];
+                case 1:
+                    return allPossibilities[1];
+                default:
+                    return allPossibilities[2];
+            }
         }
     }
     class SolveSudoku
@@ -468,7 +478,7 @@ namespace SudokuSolver
             return isGridValid;
         }
 
-        private static bool IsFilledOut(int[] gridIntArray)
+        private static bool IsFilledOut(IEnumerable<int> gridIntArray)
         {
             return gridIntArray.All(number => number != 0);
         }
@@ -477,15 +487,13 @@ namespace SudokuSolver
         {
             var onePossibilityIndexes = new List<int> { };
             int onePossibilityIndexesFromLastIteration = 1;
-            var index = 0;
-            var possibilities = new List<List<int>>();
 
             while (onePossibilityIndexes.Count != onePossibilityIndexesFromLastIteration)
             {
                 onePossibilityIndexesFromLastIteration = onePossibilityIndexes.Count;
                 onePossibilityIndexes.Clear();
-                possibilities = GetPossibleNumbersInGrid(grid);
-                index = 0;
+                var possibilities = GetPossibleNumbersInGrid(grid);
+                var index = 0;
                 foreach (var possibility in possibilities)
                 {
                     if (possibility.Count == 1)
