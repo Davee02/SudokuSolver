@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace SudokuSolver
 {
-    class Helper
+    static class Helper
     {
-        public static readonly int[] OneToNineArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        public static readonly int[] OneToNineArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         public static int[] GenerateGridArray(string gridString)
         {
@@ -34,21 +34,11 @@ namespace SudokuSolver
             return gridArray;
         }
 
-        public static List<int> StringToIntList(string inputString)
-        {
-            var outputList = new List<int>();
-            foreach (char singleChar in inputString)
-            {
-                var stringToAdd = int.Parse(singleChar.ToString());
-                outputList.Add(stringToAdd);
-            }
-            return outputList;
-        }
-
         public static string IntArrayToString(int[] intArray)
         {
             return new string(Array.ConvertAll(intArray, x => (char)('0' + x)));
         }
+
         public static string RemoveWhitespaces(string input)
         {
             return new string(input.ToCharArray()
@@ -68,6 +58,29 @@ namespace SudokuSolver
             }
             var grids = File.ReadAllLines(path);
             return grids;
+        }
+
+        public static T[][] ToJaggedArray<T>(this T[,] twoDimensionalArray)
+        {
+            int rowsFirstIndex = twoDimensionalArray.GetLowerBound(0);
+            int rowsLastIndex = twoDimensionalArray.GetUpperBound(0);
+            int numberOfRows = rowsLastIndex + 1;
+
+            int columnsFirstIndex = twoDimensionalArray.GetLowerBound(1);
+            int columnsLastIndex = twoDimensionalArray.GetUpperBound(1);
+            int numberOfColumns = columnsLastIndex + 1;
+
+            T[][] jaggedArray = new T[numberOfRows][];
+            for (int i = rowsFirstIndex; i <= rowsLastIndex; i++)
+            {
+                jaggedArray[i] = new T[numberOfColumns];
+
+                for (int j = columnsFirstIndex; j <= columnsLastIndex; j++)
+                {
+                    jaggedArray[i][j] = twoDimensionalArray[i, j];
+                }
+            }
+            return jaggedArray;
         }
     }
 }
