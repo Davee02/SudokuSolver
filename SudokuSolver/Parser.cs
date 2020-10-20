@@ -1,47 +1,51 @@
-﻿namespace SudokuSolver
+﻿using System.Text;
+
+namespace SudokuSolver
 {
     class Parser
     {
         public static string PrettyPrintString(string gridString)
         {
-            var prettyGrid = "";
+            var sb = new StringBuilder();
 
             for (int i = 0; i < gridString.Length; i++)
             {
-                prettyGrid += gridString[i] + " ";
+                sb.Append(gridString[i] + " ");
                 if ((i + 1) % 27 == 0)
                 {
-                    prettyGrid += "\n\n";
+                    sb.Append("\n\n");
                 }
                 else
                 {
                     if ((i + 1) % 9 == 0)
                     {
-                        prettyGrid += "\n";
+                        sb.Append("\n");
                     }
                     else
                     {
                         if ((i + 1) % 3 == 0)
                         {
-                            prettyGrid += "\t";
+                            sb.Append("\t");
                         }
                     }
                 }
             }
 
-            return prettyGrid;
+            return sb.ToString();
         }
 
         public static string TransformGridFromPointToZero(string grid)
         {
-            var newGrid = "";
+            var sb = new StringBuilder();
 
             foreach (var item in grid)
             {
-                newGrid += item == '.' ? "0" : item.ToString();
+                sb.Append(item == '.'
+                    ? "0"
+                    : item.ToString());
             }
 
-            return newGrid;
+            return sb.ToString();
         }
     }
 }

@@ -20,7 +20,7 @@ namespace SudokuSolver
                 Console.ReadLine();
                 return;
             }
-            if(arguments.Contains("-short"))
+            if (arguments.Contains("-short"))
             {
                 shortOutput = true;
             }
@@ -30,8 +30,11 @@ namespace SudokuSolver
                 try
                 {
                     var grids = Helper.GetGridsFromFile(arguments[index + 1]);
-                    if (grids.Length == 1 & grids[0] == "")
+                    if (grids.Length == 1 && grids[0] == "")
+                    {
                         grids[0] = arguments[index + 1];
+                    }
+
                     foreach (string grid in grids)
                     {
                         Solver.Solve(grid, shortOutput);
@@ -44,14 +47,17 @@ namespace SudokuSolver
                 }
             }
 
-            else if(arguments.Contains("-validate"))
+            else if (arguments.Contains("-validate"))
             {
                 int index = arguments.IndexOf("-validate");
                 try
                 {
                     var grids = Helper.GetGridsFromFile(arguments[index + 1]);
-                    if (grids.Length == 1 & grids[0] == "")
+                    if (grids.Length == 1 && grids[0] == "")
+                    {
                         grids[0] = arguments[index + 1];
+                    }
+
                     foreach (string grid in grids)
                     {
                         Solver.Validate(grid, shortOutput);

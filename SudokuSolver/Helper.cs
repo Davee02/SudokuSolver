@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -56,8 +55,8 @@ namespace SudokuSolver
             {
                 return new[] { "" };
             }
-            var grids = File.ReadAllLines(path);
-            return grids;
+
+            return File.ReadAllLines(path);
         }
 
         public static T[][] ToJaggedArray<T>(this T[,] twoDimensionalArray)
@@ -80,6 +79,7 @@ namespace SudokuSolver
                     jaggedArray[i][j] = twoDimensionalArray[i, j];
                 }
             }
+
             return jaggedArray;
         }
     }
