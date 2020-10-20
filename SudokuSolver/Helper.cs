@@ -1,20 +1,18 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 
 namespace SudokuSolver
 {
     static class Helper
     {
-        public static readonly int[] OneToNineArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        public static readonly int[] ZeroToNineArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         public static int[] GenerateGridArray(string gridString)
         {
             var gridArray = new int[81];
-            int counter = -1;
+            int counter = 0;
             foreach (char number in gridString)
             {
-                ++counter;
                 var numberString = number.ToString();
                 try
                 {
@@ -28,6 +26,8 @@ namespace SudokuSolver
                     Console.ReadLine();
                     Environment.Exit(1);
                 }
+
+                counter++;
             }
 
             return gridArray;
@@ -36,13 +36,6 @@ namespace SudokuSolver
         public static string IntArrayToString(int[] intArray)
         {
             return new string(Array.ConvertAll(intArray, x => (char)('0' + x)));
-        }
-
-        public static string RemoveWhitespaces(string input)
-        {
-            return new string(input.ToCharArray()
-                .Where(c => !char.IsWhiteSpace(c))
-                .ToArray());
         }
 
         public static string[] GetGridsFromFile(string path)
